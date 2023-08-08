@@ -18,31 +18,51 @@ const slides = [
 	},
 ];
 
-// Fleches interactives
+// DOM Elements
+const dotsDiv = document.querySelector('.dots');
 const arrowLeft = document.querySelector('.arrow_left');
 const arrowRight = document.querySelector('.arrow_right');
+const bannerImage = document.querySelector('.banner-img');
+const bannerTagLine = document.querySelector('#banner p');
 
-arrowLeft.addEventListener('click', () => console.log('worked left'));
-arrowRight.addEventListener('click', () => console.log('worked right'));
-
-// Bullet points
-const dotsDiv = document.querySelector('.dots');
 let currentSlide = 0;
 
-function generateBulletPoints(slides) {
+// Bullet points function creation loop
+function generateBulletPoints() {
 	for (let i = 0; i < slides.length; i++) {
 		const bullet = document.createElement('span');
 		bullet.className = 'dot';
 		dotsDiv.appendChild(bullet);
 	}
 }
+generateBulletPoints();
 
-function updateDot() {
-	const bullets = dotsDiv.querySelectorAll('.dot');
+// Variable for the updateDot function
+const bullets = dotsDiv.querySelectorAll('.dot');
+bullets[currentSlide].classList.add('dot_selected');
+
+// Update function for the bullet points
+function updateDot(index) {
 	bullets.forEach((bullet) => bullet.classList.remove('dot_selected'));
-
+	currentSlide = index;
 	bullets[currentSlide].classList.add('dot_selected');
-	console.log(bullets);
+	bannerImage.src = `./assets/images/slideshow/${slides[currentSlide].image}`;
+	bannerTagLine.innerHTML = slides[currentSlide].tagLine;
 }
-generateBulletPoints(slides);
-updateDot();
+
+// Events listeners for arrows to switch slides
+arrowLeft.addEventListener('click', () => {
+	if (currentSlide === 0) {
+		updateDot(slides.length - 1);
+	} else {
+		updateDot(currentSlide - 1);
+	}
+});
+
+arrowRight.addEventListener('click', () => {
+	if (currentSlide === slides.length - 1) {
+		updateDot(0);
+	} else {
+		updateDot(currentSlide + 1);
+	}
+});
